@@ -4,25 +4,35 @@ php:
   - 5.6
   - 7
 
+global:
+  - APP_NAME=bookmarks
+
 env:
-  global:
-    - APP_NAME=bookmarks
+  # owncloud setups: only sqlite, only >=stable9.1
+  - DB=sqlite SERVER=owncloud/administration/master/travis-ci SERVER_BRANCH=master
+  - DB=sqlite SERVER=owncloud/administration/master/travis-ci SERVER_BRANCH=stable9.1
 
-  matrix:
-    # owncloud setups: only sqlite, only >=stable9.1
-    - DB=sqlite SERVER=owncloud/administration/master/travis-ci SERVER_BRANCH=master
-    - DB=sqlite SERVER=owncloud/administration/master/travis-ci SERVER_BRANCH=stable9.1
+  # nextcloud setups, full tests for master+latest stable branch, older only sqlite
+  - DB=sqlite SERVER=nextcloud/travis_ci/master SERVER_BRANCH=master
+  - DB=mysql  SERVER=nextcloud/travis_ci/master SERVER_BRANCH=master
+  - DB=pgsql  SERVER=nextcloud/travis_ci/master SERVER_BRANCH=master
 
-    # nextcloud setups, full tests for master+latest stable branch, older only sqlite
-    - DB=sqlite SERVER=nextcloud/travis_ci/master SERVER_BRANCH=master
-    - DB=mysql  SERVER=nextcloud/travis_ci/master SERVER_BRANCH=master
-    - DB=pgsql  SERVER=nextcloud/travis_ci/master SERVER_BRANCH=master
+  - DB=sqlite SERVER=nextcloud/travis_ci/master SERVER_BRANCH=stable10
+  - DB=mysql  SERVER=nextcloud/travis_ci/master SERVER_BRANCH=stable10
+  - DB=pgsql  SERVER=nextcloud/travis_ci/master SERVER_BRANCH=stable10
 
-    - DB=sqlite SERVER=nextcloud/travis_ci/master SERVER_BRANCH=stable10
-    - DB=mysql  SERVER=nextcloud/travis_ci/master SERVER_BRANCH=stable10
-    - DB=pgsql  SERVER=nextcloud/travis_ci/master SERVER_BRANCH=stable10
-
-    - DB=sqlite SERVER=nextcloud/travis_ci/master SERVER_BRANCH=stable9
+  - DB=sqlite SERVER=nextcloud/travis_ci/master SERVER_BRANCH=stable9
+  
+matrix:
+  exclude:
+    - php: 5.5
+      env: DB=sqlite SERVER=owncloud/administration/master/travis-ci SERVER_BRANCH=master
+    - php: 5.5
+      env: DB=sqlite SERVER=nextcloud/travis_ci/master SERVER_BRANCH=master
+    - php: 5.5
+      env: DB=mysql  SERVER=nextcloud/travis_ci/master SERVER_BRANCH=master
+    - php: 5.5
+      env: DB=pgsql  SERVER=nextcloud/travis_ci/master SERVER_BRANCH=master
 
 branches:
   only:
